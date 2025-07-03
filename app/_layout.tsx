@@ -1,10 +1,15 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
+import { Stack, router } from 'expo-router';
 import 'react-native-reanimated';
-
+import 'react-native-gesture-handler';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import CustomHeader from '@/components/CustomHeader';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import Colors from '@/constants/Colors';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { StatusBar } from 'react-native'
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -18,12 +23,47 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <GestureHandlerRootView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
+      <BottomSheetModalProvider>
+        <Stack>
+          <Stack.Screen name="index" options={{
+            header: () => <CustomHeader />,
+          }} />
+          <Stack.Screen name="(modal)/filter"
+            options={{
+              presentation: 'modal',
+              headerTitle: 'Filter',
+              headerShadowVisible: false,
+              headerStyle: {
+                backgroundColor: Colors.lightGrey,
+              },
+              headerLeft: () => (
+                <TouchableOpacity onPress={() => {router.back()}}>
+                  <Ionicons name="close-outline" size={23} color={Colors.primary} />
+                </TouchableOpacity>
+              ),
+            }}
+          />
+          <Stack.Screen name="(modal)/location-search"
+            options={{
+              presentation: 'fullScreenModal',
+              headerTitle: 'Select Location',
+              headerLeft: () => (
+                <TouchableOpacity onPress={() => {router.back()}}>
+                  <Ionicons name="close-outline" size={23} color={Colors.primary} />
+                </TouchableOpacity>
+              ),
+            }}
+          />
+        </Stack>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
