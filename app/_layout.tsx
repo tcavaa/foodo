@@ -1,15 +1,15 @@
+import CustomHeader from '@/components/CustomHeader';
+import Colors from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { HeaderTitle } from '@react-navigation/elements';
 import { useFonts } from 'expo-font';
 import { Stack, router } from 'expo-router';
-import 'react-native-reanimated';
+import { StatusBar, StyleSheet, TouchableOpacity } from 'react-native';
 import 'react-native-gesture-handler';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import CustomHeader from '@/components/CustomHeader';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import Colors from '@/constants/Colors';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { StatusBar } from 'react-native'
+import 'react-native-reanimated';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -54,6 +54,35 @@ export default function RootLayout() {
                   <Ionicons name="close-outline" size={23} color={Colors.primary} />
                 </TouchableOpacity>
               ),
+            }}
+          />
+          <Stack.Screen name="(modal)/dish"
+            options={{
+              presentation: 'modal',
+              headerTitle: '',
+              headerTransparent: true,
+              headerLeft: () => (
+                <TouchableOpacity 
+                  style={{ backgroundColor: '#fff', borderRadius: 20, padding: 6}}
+                  onPress={() => {router.back()}}
+                >
+                  <Ionicons name="close-outline" size={23} color={Colors.primary} />
+                </TouchableOpacity>
+              ),
+            }}
+          />
+          <Stack.Screen name="basket"
+            options={{
+              headerTitle: 'Basket',
+              headerLeft: () => (
+                <TouchableOpacity
+                  onPress={() => {
+                    router.back()
+                  }}
+                >
+                 <Ionicons name='arrow-back' size={28} color={Colors.primary}/>
+                </TouchableOpacity>
+              )
             }}
           />
         </Stack>
